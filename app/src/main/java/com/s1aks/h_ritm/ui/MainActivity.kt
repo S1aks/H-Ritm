@@ -1,4 +1,4 @@
-package com.s1aks.h_ritm
+package com.s1aks.h_ritm.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
