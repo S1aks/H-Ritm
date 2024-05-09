@@ -6,21 +6,22 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.s1aks.h_ritm.data.entities.HeartData
 import com.s1aks.h_ritm.ui.MainViewModel
 import java.time.Instant
@@ -86,15 +87,47 @@ private fun HeartData.getColor(): Color =
     }
 
 @Composable
+fun DateItem() {
+    HorizontalDivider(thickness = 1.dp, color = Color.DarkGray)
+    Text(
+        modifier = Modifier
+            .padding(horizontal = 12.dp, vertical = 2.dp),
+        fontSize = 20.sp,
+        text = "28 февраля 2024"
+    )
+}
+
+@Composable
 fun ListItem(heartData: HeartData) {
     HorizontalDivider(thickness = 1.dp, color = Color.DarkGray)
     Row(
-
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        Color.White,
+                        heartData.getColor(), heartData.getColor(),
+                        Color.White
+                    )
+                ),
+            )
+            .padding(horizontal = 12.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
+            fontSize = 20.sp,
             text = heartData.time,
         )
-        Text(text = heartData.topPressure.toString())
+        Text(
+            fontSize = 30.sp,
+            text = "${heartData.topPressure} / ${heartData.lowPressure}"
+        )
+        Text(
+            fontSize = 24.sp,
+            text = "♡ ${heartData.pulse}"
+        )
     }
 }
 
@@ -104,18 +137,9 @@ fun DataList(list: List<HeartData>) {
         items(list) { listItem ->
             Column(
                 modifier = Modifier
-                    .height(40.dp)
                     .fillMaxWidth()
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                Color.White,
-                                listItem.getColor(), listItem.getColor(),
-                                Color.White
-                            )
-                        ),
-                    )
             ) {
+                if (list.indexOf(listItem) == 0) DateItem()
                 ListItem(heartData = listItem)
             }
         }
