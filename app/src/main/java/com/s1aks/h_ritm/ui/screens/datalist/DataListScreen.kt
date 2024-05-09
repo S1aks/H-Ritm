@@ -6,9 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,17 +27,18 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DataListScreen(viewModel: MainViewModel) {
+fun DataListScreen(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     DataList(list = viewModel.dataList)
 }
 
 private val preview_list = listOf(
-    HeartData(1, "15:00", 120, 80, 60),
-    HeartData(2, "16:30", 120, 74, 65),
-    HeartData(3, "17:27", 150, 90, 74),
-    HeartData(4, "18:40", 110, 70, 47),
-    HeartData(5, "19:43", 125, 82, 54),
+    HeartData(1, 1715227048000L, 120, 80, 60),
+    HeartData(2, 1715236148000L, 120, 74, 65),
+    HeartData(3, 1715347448000L, 150, 90, 74),
+    HeartData(4, 1715347848000L, 110, 70, 47),
+    HeartData(5, 1715399048000L, 125, 82, 54),
 )
 
 private val ListItemColors = listOf(
@@ -51,17 +50,17 @@ private val ListItemColors = listOf(
     Color(0xFFFFA0A0),
 )
 
-const val DATE_DAY_FORMAT = "dd MMMM"
+const val DATE_DAY_FORMAT = "dd MMMM y"
 const val DATE_TIME_FORMAT = "HH:mm"
 
-val String.millisGetDate: String
+val Long.getDate: String
     @RequiresApi(Build.VERSION_CODES.O)
-    get() = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.toLong()), ZoneId.systemDefault())
+    get() = LocalDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
         .format(DateTimeFormatter.ofPattern(DATE_DAY_FORMAT))
 
-val String.millisGetTime: String
+val Long.getTime: String
     @RequiresApi(Build.VERSION_CODES.O)
-    get() = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.toLong()), ZoneId.systemDefault())
+    get() = LocalDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
         .format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
 
 private fun HeartData.getColor(): Color =
@@ -87,16 +86,17 @@ private fun HeartData.getColor(): Color =
     }
 
 @Composable
-fun DateItem() {
+fun DateItem(text: String) {
     HorizontalDivider(thickness = 1.dp, color = Color.DarkGray)
     Text(
         modifier = Modifier
             .padding(horizontal = 12.dp, vertical = 2.dp),
         fontSize = 20.sp,
-        text = "28 февраля 2024"
+        text = text
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ListItem(heartData: HeartData) {
     HorizontalDivider(thickness = 1.dp, color = Color.DarkGray)
@@ -118,7 +118,7 @@ fun ListItem(heartData: HeartData) {
     ) {
         Text(
             fontSize = 20.sp,
-            text = heartData.time,
+            text = heartData.dateTime.getTime,
         )
         Text(
             fontSize = 30.sp,
@@ -131,6 +131,7 @@ fun ListItem(heartData: HeartData) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DataList(list: List<HeartData>) {
     LazyColumn {
@@ -139,13 +140,19 @@ fun DataList(list: List<HeartData>) {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                if (list.indexOf(listItem) == 0) DateItem()
+                val indexItem = list.indexOf(listItem)
+                val currentDate = listItem.dateTime.getDate
+                val prevDate = if (indexItem > 0) {
+                    list[indexItem - 1].dateTime.getDate
+                } else currentDate
+                if (indexItem == 0 || currentDate != prevDate) DateItem(currentDate)
                 ListItem(heartData = listItem)
             }
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun DataListPreview() {
