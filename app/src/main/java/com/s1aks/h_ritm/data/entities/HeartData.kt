@@ -5,5 +5,5 @@ data class HeartData(
     val dateTime: Long,
     val topPressure: Int,
     val lowPressure: Int,
-    val pulse: Int
+    val pulse: Int?
 )

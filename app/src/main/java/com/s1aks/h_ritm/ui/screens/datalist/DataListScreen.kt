@@ -36,17 +36,15 @@ fun DataListScreen(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 private val preview_list = listOf(
     HeartData(1, 1715227048000L, 120, 80, 60),
     HeartData(2, 1715236148000L, 120, 74, 65),
-    HeartData(3, 1715347448000L, 150, 90, 74),
+    HeartData(3, 1715347448000L, 151, 90, 74),
     HeartData(4, 1715347848000L, 110, 70, 47),
     HeartData(5, 1715399048000L, 125, 82, 54),
 )
 
 private val ListItemColors = listOf(
     Color(0xFFA0FFA0),
-    Color(0xFFD0FFA0),
     Color(0xFFFFF6A0),
     Color(0xFFFFD1A0),
-    //Color(0xFFFFB6A0),
     Color(0xFFFFA0A0),
 )
 
@@ -63,23 +61,42 @@ val Long.getTime: String
     get() = LocalDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
         .format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
 
+private data class HeartRange(
+    val ageRange: IntRange,
+    val topRange: IntRange,
+    val lowRange: IntRange
+)
+
+private val heartRangesByAge = arrayOf(
+    HeartRange(0..20, 110..120, 70..80),
+    HeartRange(21..40, 120..130, 70..80),
+    HeartRange(41..60, 120..140, 70..90),
+    HeartRange(61..120, 120..150, 70..90)
+)
+
+private const val AGE = 45
+
 private fun HeartData.getColor(): Color =
     with(this) {
+        val heartRange = heartRangesByAge.first { AGE in it.ageRange }
         when {
-            topPressure < 100 || topPressure > 144 || lowPressure < 60 || lowPressure > 99 ||
-                    pulse < 45 || pulse > 99 -> ListItemColors[4]
+            topPressure < heartRange.topRange.first - 10
+                    || topPressure > heartRange.topRange.last + 10
+                    || lowPressure < heartRange.lowRange.first - 10
+                    || lowPressure > heartRange.lowRange.last + 10
+                    || (pulse != null && (pulse < 45 || pulse > 105)) -> ListItemColors[3]
 
-            topPressure in (100..104) || topPressure in (140..144) ||
-                    lowPressure in (60..64) || lowPressure in (95..99) ||
-                    pulse in (45..49) || pulse in (95..99) -> ListItemColors[3]
+            topPressure < heartRange.topRange.first - 5
+                    || topPressure > heartRange.topRange.last + 5
+                    || lowPressure < heartRange.lowRange.first - 5
+                    || lowPressure > heartRange.lowRange.last + 5
+                    || (pulse != null && (pulse < 50 || pulse > 100)) -> ListItemColors[2]
 
-            topPressure in (105..109) || topPressure in (135..139) ||
-                    lowPressure in (65..69) || lowPressure in (90..94) ||
-                    pulse in (50..54) || pulse in (90..94) -> ListItemColors[2]
-
-            topPressure in (110..114) || topPressure in (130..134) ||
-                    lowPressure in (70..74) || lowPressure in (85..89) ||
-                    pulse in (55..59) || pulse in (80..89) -> ListItemColors[1]
+            topPressure < heartRange.topRange.first
+                    || topPressure > heartRange.topRange.last
+                    || lowPressure < heartRange.lowRange.first
+                    || lowPressure > heartRange.lowRange.last
+                    || (pulse != null && (pulse < 55 || pulse > 95)) -> ListItemColors[1]
 
             else -> ListItemColors[0]
         }
