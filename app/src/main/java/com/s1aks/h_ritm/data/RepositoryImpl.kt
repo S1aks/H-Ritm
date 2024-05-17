@@ -1,27 +1,22 @@
 package com.s1aks.h_ritm.data
 
+import com.s1aks.h_ritm.data.db.HeartDataBase
 import com.s1aks.h_ritm.data.entities.HeartData
 import com.s1aks.h_ritm.domain.Repository
 
-class RepositoryImpl() : Repository {
-    override fun getData(id: Int): HeartData {
-        TODO("Not yet implemented")
-    }
+class RepositoryImpl : Repository {
+    override suspend fun getData(id: Int): HeartData =
+        HeartDataBase.getInstance().historyDao().getData(id).toHeartData()
 
-    override fun getAllData(): List<HeartData> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getAllData(): List<HeartData> =
+        HeartDataBase.getInstance().historyDao().getAll().toListHeartData()
 
-    override fun insertData(data: HeartData) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun insertData(data: HeartData) =
+        HeartDataBase.getInstance().historyDao().insert(data.toHeartDataEntity())
 
-    override fun updateData(data: HeartData) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun updateData(data: HeartData) =
+        HeartDataBase.getInstance().historyDao().update(data.toHeartDataEntity())
 
-    override fun deleteData(id: Int) {
-        TODO("Not yet implemented")
-    }
-
+    override suspend fun deleteData(data: HeartData) =
+        HeartDataBase.getInstance().historyDao().delete(data.toHeartDataEntity())
 }

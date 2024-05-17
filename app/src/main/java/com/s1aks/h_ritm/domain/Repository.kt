@@ -3,9 +3,9 @@ package com.s1aks.h_ritm.domain
 import com.s1aks.h_ritm.data.entities.HeartData
 
 interface Repository {
-    fun getData(id: Int): HeartData
-    fun getAllData(): List<HeartData>
-    fun insertData(data: HeartData)
-    fun updateData(data: HeartData)
-    fun deleteData(id: Int)
+    suspend fun getData(id: Int): HeartData
+    suspend fun getAllData(): List<HeartData>
+    suspend fun insertData(data: HeartData)
+    suspend fun updateData(data: HeartData)
+    suspend fun deleteData(data: HeartData)
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
@@ -24,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.s1aks.h_ritm.data.entities.HeartData
 import com.s1aks.h_ritm.ui.MainViewModel
-import com.s1aks.h_ritm.ui.theme.TextColor
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -49,11 +49,12 @@ private val preview_list = listOf(
     HeartData(5, 1715399048000L, 125, 82, 54),
 )
 
-private val ListItemColors = listOf(
-    Color(0xFFA0FFA0),
-    Color(0xFFFFF6A0),
-    Color(0xFFFFD1A0),
-    Color(0xFFFFA0A0),
+private val listItemColors = listOf(
+    Color(0x99838383),
+    Color(0x9900FF00),
+    Color(0x99FFE700),
+    Color(0x99FF8400),
+    Color(0x99FF0000),
 )
 
 const val DATE_DAY_FORMAT = "dd MMMM y"
@@ -92,21 +93,21 @@ private fun HeartData.getColor(): Color =
                     || topPressure > heartRange.topRange.last + 10
                     || lowPressure < heartRange.lowRange.first - 10
                     || lowPressure > heartRange.lowRange.last + 10
-                    || (pulse != null && (pulse < 45 || pulse > 105)) -> ListItemColors[3]
+                    || (pulse != null && (pulse < 45 || pulse > 105)) -> listItemColors[4]
 
             topPressure < heartRange.topRange.first - 5
                     || topPressure > heartRange.topRange.last + 5
                     || lowPressure < heartRange.lowRange.first - 5
                     || lowPressure > heartRange.lowRange.last + 5
-                    || (pulse != null && (pulse < 50 || pulse > 100)) -> ListItemColors[2]
+                    || (pulse != null && (pulse < 50 || pulse > 100)) -> listItemColors[3]
 
             topPressure < heartRange.topRange.first
                     || topPressure > heartRange.topRange.last
                     || lowPressure < heartRange.lowRange.first
                     || lowPressure > heartRange.lowRange.last
-                    || (pulse != null && (pulse < 55 || pulse > 95)) -> ListItemColors[1]
+                    || (pulse != null && (pulse < 55 || pulse > 95)) -> listItemColors[2]
 
-            else -> ListItemColors[0]
+            else -> listItemColors[1]
         }
     }
 
@@ -118,16 +119,15 @@ fun DateItem(text: String) {
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        Color.LightGray,
-                        Color.White,
-                        Color.LightGray
+                        listItemColors[0],
+                        Color.Transparent,
+//                        listItemColors[0]
                     )
                 )
             )
             .padding(horizontal = 12.dp, vertical = 2.dp),
         fontSize = 20.sp,
         fontStyle = FontStyle.Italic,
-        color = TextColor,
         text = text
     )
     HorizontalDivider(color = Color.DarkGray)
@@ -142,10 +142,10 @@ fun ListItem(heartData: HeartData) {
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        Color.White,
+                        Color.Transparent,
                         heartData.getColor(),
                         heartData.getColor(),
-                        Color.White
+                        Color.Transparent
                     )
                 ),
             )
@@ -155,18 +155,16 @@ fun ListItem(heartData: HeartData) {
     ) {
         Text(
             fontSize = 20.sp,
-            color = TextColor,
             text = heartData.dateTime.getTime,
         )
         Text(
             fontSize = 30.sp,
-            color = TextColor,
             text = "${heartData.topPressure} / ${heartData.lowPressure}"
         )
         Text(
+            modifier = Modifier.width(60.dp),
             fontSize = 24.sp,
-            color = TextColor,
-            text = "♡ ${heartData.pulse ?: "-"}"
+            text = "♡ ${heartData.pulse ?: " -"}"
         )
     }
     HorizontalDivider(color = Color.DarkGray)

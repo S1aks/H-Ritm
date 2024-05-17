@@ -33,6 +33,10 @@ class MainViewModel : ViewModel() {
 
     }
 
+    init {
+        getAllData()
+    }
+
     fun getData(id: Int) {
         viewModelScope.doIO { dataList = listOf(repository.getData(id)) }
     }
@@ -57,7 +61,7 @@ class MainViewModel : ViewModel() {
 
     fun deleteData(data: HeartData) {
         viewModelScope.doIO {
-            repository.deleteData(data.id)
+            repository.deleteData(data)
             getAllData()
         }
     }
