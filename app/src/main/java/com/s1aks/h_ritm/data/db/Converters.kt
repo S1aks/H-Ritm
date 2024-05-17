@@ -13,6 +13,7 @@ class LocalDateTimeConverters {
     fun fromTimestamp(value: Long?): LocalDateTime? {
         return value?.let { LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC) }
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     fun dateToTimestamp(date: LocalDateTime?): Long? {
