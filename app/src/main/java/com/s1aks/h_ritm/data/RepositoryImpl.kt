@@ -17,6 +17,6 @@ class RepositoryImpl : Repository {
     override suspend fun updateData(data: HeartData) =
         HeartDataBase.getInstance().historyDao().update(data)
 
-    override suspend fun deleteData(data: HeartData) =
-        HeartDataBase.getInstance().historyDao().delete(data)
+    override suspend fun deleteData(id: Int) =
+        HeartDataBase.getInstance().historyDao().delete(id)
 }

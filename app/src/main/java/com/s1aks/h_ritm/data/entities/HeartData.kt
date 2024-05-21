@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class HeartData(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     var id: Int,
     val dateTime: Long,
     val topPressure: Int,

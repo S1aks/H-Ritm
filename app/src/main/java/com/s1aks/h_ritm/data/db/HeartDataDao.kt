@@ -1,7 +1,6 @@
 package com.s1aks.h_ritm.data.db
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -17,12 +16,12 @@ interface HeartDataDao {
     @Query("SELECT * FROM HeartData WHERE id LIKE :id")
     suspend fun getData(id: Int): HeartData
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(data: HeartData)
 
     @Update
     suspend fun update(data: HeartData)
 
-    @Delete
-    suspend fun delete(data: HeartData)
+    @Query("DELETE FROM HeartData WHERE id = :id")
+    suspend fun delete(id: Int)
 }

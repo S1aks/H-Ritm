@@ -7,5 +7,5 @@ interface Repository {
     suspend fun getAllData(): List<HeartData>
     suspend fun insertData(data: HeartData)
     suspend fun updateData(data: HeartData)
-    suspend fun deleteData(data: HeartData)
+    suspend fun deleteData(id: Int)
 }
