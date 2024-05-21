@@ -4,9 +4,10 @@ import androidx.room.Database
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
 import com.s1aks.h_ritm.App
+import com.s1aks.h_ritm.data.entities.HeartData
 
 @Database(
-    entities = [HeartDataEntity::class],
+    entities = [HeartData::class],
     version = 1,
     exportSchema = false
 )

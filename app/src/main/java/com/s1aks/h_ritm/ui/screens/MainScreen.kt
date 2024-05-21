@@ -44,7 +44,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.s1aks.h_ritm.data.entities.HeartData
-import com.s1aks.h_ritm.ui.MainViewModel
 import com.s1aks.h_ritm.ui.screens.datalist.DataListScreen
 import kotlinx.coroutines.launch
 
@@ -211,9 +210,7 @@ fun MainScreen() {
                     }
                 }
             }
-            DataListScreen(
-                viewModel = MainViewModel(),
-            )
+            DataListScreen()
         }
     }
 }
