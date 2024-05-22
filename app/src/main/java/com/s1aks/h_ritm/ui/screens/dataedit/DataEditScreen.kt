@@ -36,7 +36,6 @@ fun DataEditScreen(
 ) {
     val (firstRef, secondRef, thirdRef) = remember { FocusRequester.createRefs() }
     val keyboardController = LocalSoftwareKeyboardController.current
-    var editedData by remember { mutableStateOf<HeartData?>(null) }
     var topPressure by remember { mutableStateOf("") }
     var lowPressure by remember { mutableStateOf("") }
     var pulse by remember { mutableStateOf("") }
