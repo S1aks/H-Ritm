@@ -21,8 +21,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.s1aks.h_ritm.ui.screens.datalist.DataListViewModel
-import com.s1aks.h_ritm.ui.screens.datalist.DataListScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -56,7 +57,14 @@ fun MainScreen(dataListViewModel: DataListViewModel = viewModel()) {
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            DataListScreen()
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.DataList.route,
+                route = NavRoutes.MainRoute.name
+            ) {
+                mainGraph(navController)
+            }
         }
     }
 }

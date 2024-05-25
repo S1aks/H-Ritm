@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiller)
     ksp(libs.androidx.room.compiller)
+    implementation(libs.androidx.navigation)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -14,36 +14,40 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.s1aks.h_ritm.data.entities.HeartData
 import com.s1aks.h_ritm.ui.elements.ContextMenuItem
+import com.s1aks.h_ritm.ui.screens.Screen
 import com.s1aks.h_ritm.utils.getDate
 import com.s1aks.h_ritm.utils.preview_list
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DataListScreen(dataListViewModel: DataListViewModel = viewModel()) {
+fun DataListScreen(
+    navController: NavController,
+    viewModel: DataListViewModel = viewModel()
+) {
     LaunchedEffect(Unit) {
-        dataListViewModel.getAllData()
+        viewModel.getAllData()
     }
     val screenState: DataListScreenState by remember {
         mutableStateOf(DataListScreenState(
             data = listOf(),
             contextMenu = listOf(
                 ContextMenuItem("Редактировать") { id ->
-                    // TODO: To EditScreen
+                    navController.navigate(Screen.DataEdit(id = id.toString()).route)
                 },
                 ContextMenuItem("Удалить") { id ->
-                    dataListViewModel.deleteData(id)
+                    viewModel.deleteData(id)
                 }
             )
         ))
     }
-    val dataList by dataListViewModel.data.collectAsState()
+    val dataList by viewModel.data.collectAsState()
     if (dataList.isNotEmpty()) {
         DataList(state = screenState.copy(data = dataList))
     } else {

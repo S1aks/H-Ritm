@@ -27,13 +27,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.s1aks.h_ritm.data.entities.HeartData
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DataEditScreen(
-    dataEditViewModel: DataEditViewModel = viewModel()
+    navController: NavController,
+    viewModel: DataEditViewModel = viewModel(),
+    id: Int
 ) {
+    val new = id == 0
     val (firstRef, secondRef, thirdRef) = remember { FocusRequester.createRefs() }
     val keyboardController = LocalSoftwareKeyboardController.current
     var topPressure by remember { mutableStateOf("") }
@@ -44,6 +48,11 @@ fun DataEditScreen(
             && if (pulse.isNotEmpty()) {
         pulse.toInt() > 20
     } else true
+    LaunchedEffect(Unit) {
+        if (!new) {
+            viewModel.getData(id)
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,7 +113,7 @@ fun DataEditScreen(
             Button(
                 enabled = sheetFieldsOk,
                 onClick = {
-                    dataEditViewModel.insertData(
+                    viewModel.insertData(
                         HeartData(
                             0,
                             System.currentTimeMillis(),
