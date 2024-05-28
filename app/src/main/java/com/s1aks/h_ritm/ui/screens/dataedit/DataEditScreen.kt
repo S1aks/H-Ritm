@@ -44,22 +44,25 @@ fun DataEditScreen(
     var topPressure by remember { mutableStateOf("") }
     var lowPressure by remember { mutableStateOf("") }
     var pulse by remember { mutableStateOf("") }
-    val allFieldsOk = topPressure.isNotEmpty() && topPressure.toInt() > 25
+    val allFieldsOk = fun(): Boolean = topPressure.isNotEmpty() && topPressure.toInt() > 25
             && lowPressure.isNotEmpty() && lowPressure.toInt() > 25
             && if (pulse.isNotEmpty()) {
         pulse.toInt() > 20
     } else true
     val data by viewModel.data.collectAsState()
-    data?.let {
-        topPressure = it.topPressure.toString()
-        lowPressure = it.lowPressure.toString()
-        pulse = if (it.pulse != null) {
-            it.pulse.toString()
-        } else {
-            ""
+    LaunchedEffect(data) {
+        data?.let {
+            topPressure = it.topPressure.toString()
+            lowPressure = it.lowPressure.toString()
+            pulse = if (it.pulse != null) {
+                it.pulse.toString()
+            } else {
+                ""
+            }
         }
     }
-    val saveData: HeartData? = if (allFieldsOk) {
+    var saveData by remember { mutableStateOf<HeartData?>(null) }
+    saveData = if (allFieldsOk()) {
         HeartData(
             if (new) {
                 0
@@ -79,7 +82,7 @@ fun DataEditScreen(
             MainScreenState(
                 title = { Text(if (new) "Добавить показания" else "Редактировать показания") },
                 actions = {
-                    DoneIconButton(enabled = allFieldsOk) {
+                    DoneIconButton(enabled = allFieldsOk()) {
                         saveData?.let {
                             if (new) {
                                 viewModel.insertData(it)
@@ -90,7 +93,6 @@ fun DataEditScreen(
                             }
                         }
                     }
-
                 }
             )
         )
