@@ -20,7 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.s1aks.h_ritm.data.entities.HeartData
+import com.s1aks.h_ritm.ui.elements.AddIconButton
 import com.s1aks.h_ritm.ui.elements.ContextMenuItem
+import com.s1aks.h_ritm.ui.screens.MainScreenState
 import com.s1aks.h_ritm.ui.screens.Screen
 import com.s1aks.h_ritm.utils.getDate
 import com.s1aks.h_ritm.utils.preview_list
@@ -29,11 +31,9 @@ import com.s1aks.h_ritm.utils.preview_list
 @Composable
 fun DataListScreen(
     navController: NavController,
+    onComposing: (MainScreenState) -> Unit,
     viewModel: DataListViewModel = viewModel()
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.getAllData()
-    }
     val screenState: DataListScreenState by remember {
         mutableStateOf(DataListScreenState(
             data = listOf(),
@@ -48,6 +48,19 @@ fun DataListScreen(
         ))
     }
     val dataList by viewModel.data.collectAsState()
+    LaunchedEffect(Unit) {
+        onComposing(
+            MainScreenState(
+                title = { Text("H-Ritm") },
+                actions = {
+                    AddIconButton {
+                        navController.navigate(Screen.DataEdit("0").route)
+                    }
+                }
+            )
+        )
+        viewModel.getAllData()
+    }
     if (dataList.isNotEmpty()) {
         DataList(state = screenState.copy(data = dataList))
     } else {

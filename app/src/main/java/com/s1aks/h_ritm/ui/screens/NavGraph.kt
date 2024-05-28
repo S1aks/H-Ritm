@@ -41,12 +41,13 @@ fun NavController.clearAndNavigate(route: String) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.mainGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    onComposing: (MainScreenState) -> Unit
 ) {
     composable(Screen.DataList.route) {
-        DataListScreen(navController = navController)
+        DataListScreen(navController = navController, onComposing = onComposing)
     }
     idComposable(Screen.DataEdit().route) { id ->
-        DataEditScreen(navController = navController, id = id)
+        DataEditScreen(navController = navController, onComposing = onComposing, id = id)
     }
 }
