@@ -52,12 +52,12 @@ fun DataListItem(
             }
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(
-                        if (!isContextMenuVisible) Color.Transparent else Color.Blue,
+                    colors = if (!isContextMenuVisible) listOf(
+                        Color.Transparent,
                         heartData.getColor(),
                         heartData.getColor(),
-                        if (!isContextMenuVisible) Color.Transparent else Color.Blue
-                    )
+                        Color.Transparent
+                    ) else listOf(Color.Blue, Color.Transparent, Color.Blue)
                 ),
             )
     ) {
