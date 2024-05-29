@@ -1,5 +1,6 @@
 package com.s1aks.h_ritm.ui.screens
 
+import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
@@ -20,12 +21,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.s1aks.h_ritm.ui.elements.AppBar
-import com.s1aks.h_ritm.ui.screens.datalist.DataListViewModel
+import com.s1aks.h_ritm.ui.screens.data_list.DataListViewModel
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -36,10 +37,18 @@ fun MainScreen(dataListViewModel: DataListViewModel = viewModel()) {
     var screenState by remember { mutableStateOf(MainScreenState()) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val activity = (LocalContext.current as? Activity)
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet { /* Drawer content */ }
+            ModalDrawerSheet {
+                DrawerContent(
+                    navController = navController,
+                    scope = scope,
+                    drawerState = drawerState,
+                    onExit = { activity?.finish() }
+                )
+            }
         },
     ) {
         Scaffold(

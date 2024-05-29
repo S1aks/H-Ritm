@@ -1,4 +1,4 @@
-package com.s1aks.h_ritm.ui.screens.dataedit
+package com.s1aks.h_ritm.ui.screens.data_edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

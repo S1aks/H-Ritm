@@ -1,4 +1,4 @@
-package com.s1aks.h_ritm.ui.screens.datalist
+package com.s1aks.h_ritm.ui.screens.data_list
 
 import android.os.Build
 import androidx.annotation.RequiresApi

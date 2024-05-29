@@ -1,4 +1,4 @@
-package com.s1aks.h_ritm.ui.screens.dataedit
+package com.s1aks.h_ritm.ui.screens.data_edit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

@@ -1,4 +1,4 @@
-package com.s1aks.h_ritm.ui.elements
+package com.s1aks.h_ritm.ui.screens
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons

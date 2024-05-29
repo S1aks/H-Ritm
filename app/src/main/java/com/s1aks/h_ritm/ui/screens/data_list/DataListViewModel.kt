@@ -1,4 +1,4 @@
-package com.s1aks.h_ritm.ui.screens.datalist
+package com.s1aks.h_ritm.ui.screens.data_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
