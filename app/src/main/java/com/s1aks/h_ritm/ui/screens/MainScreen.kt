@@ -6,12 +6,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.s1aks.h_ritm.ui.elements.AppBar
 import com.s1aks.h_ritm.ui.screens.datalist.DataListViewModel
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
@@ -28,24 +34,43 @@ import com.s1aks.h_ritm.ui.screens.datalist.DataListViewModel
 fun MainScreen(dataListViewModel: DataListViewModel = viewModel()) {
     val navController = rememberNavController()
     var screenState by remember { mutableStateOf(MainScreenState()) }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            AppBar(title = screenState.title) { screenState.actions?.invoke(this) }
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            NavHost(
-                navController = navController,
-                startDestination = Screen.DataList.route,
-                route = NavRoutes.MainRoute.name
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet { /* Drawer content */ }
+        },
+    ) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                AppBar(
+                    title = screenState.title,
+                    navigationIconVisible = screenState.drawerEnabled,
+                    onNavigationIconClick = {
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    }
+                ) { screenState.actions?.invoke(this) }
+            }
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                mainGraph(navController) { screenState = it }
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.DataList.route,
+                    route = NavRoutes.MainRoute.name
+                ) {
+                    mainGraph(navController) { screenState = it }
+                }
             }
         }
     }
@@ -53,5 +78,6 @@ fun MainScreen(dataListViewModel: DataListViewModel = viewModel()) {
 
 data class MainScreenState(
     val title: @Composable () -> Unit = { Text("") },
+    val drawerEnabled: Boolean = true,
     val actions: (@Composable RowScope.() -> Unit)? = null
 )
