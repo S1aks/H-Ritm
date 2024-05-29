@@ -41,13 +41,15 @@ fun MainScreen(dataListViewModel: DataListViewModel = viewModel()) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
-                DrawerContent(
-                    navController = navController,
-                    scope = scope,
-                    drawerState = drawerState,
-                    onExit = { activity?.finish() }
-                )
+            if (screenState.drawerEnabled) {
+                ModalDrawerSheet {
+                    DrawerContent(
+                        navController = navController,
+                        scope = scope,
+                        drawerState = drawerState,
+                        onExit = { activity?.finish() }
+                    )
+                }
             }
         },
     ) {

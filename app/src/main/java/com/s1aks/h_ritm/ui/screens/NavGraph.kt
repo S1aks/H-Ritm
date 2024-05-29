@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.s1aks.h_ritm.ui.screens.data_edit.DataEditScreen
 import com.s1aks.h_ritm.ui.screens.data_list.DataListScreen
+import com.s1aks.h_ritm.ui.screens.settings.SettingsScreen
 
 fun NavGraphBuilder.idComposable(
     route: String,
@@ -30,6 +31,7 @@ enum class NavRoutes {
 sealed class Screen(val route: String) {
     object DataList : Screen("data_list")
     class DataEdit(id: String = "{id}") : Screen("data_edit/$id")
+    object Settings : Screen("settings")
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -42,5 +44,8 @@ fun NavGraphBuilder.mainGraph(
     }
     idComposable(Screen.DataEdit().route) { id ->
         DataEditScreen(navController = navController, onComposing = onComposing, id = id)
+    }
+    composable(Screen.Settings.route) {
+        SettingsScreen(navController = navController, onComposing = onComposing)
     }
 }

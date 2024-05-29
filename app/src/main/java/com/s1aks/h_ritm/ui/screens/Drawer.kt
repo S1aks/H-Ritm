@@ -76,8 +76,8 @@ sealed class MainNavItem(
     val isDivider: Boolean = false,
 ) {
     object Spacer : MainNavItem("", null, "", true)
-    object Settings : MainNavItem("Настройки", Icons.Default.Settings, Screen.DataEdit("0").route)
-    object Export : MainNavItem("Экспорт данных", Icons.Default.Share, Screen.DataList.route)
+    object Settings : MainNavItem("Настройки", Icons.Default.Settings, Screen.Settings.route)
+    object Export : MainNavItem("Экспорт данных", Icons.Default.Share, "")
     object Exit : MainNavItem("Выход", Icons.AutoMirrored.Filled.ExitToApp, "Exit")
 }
 
