@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,62 +41,69 @@ fun DataListItem(
 ) {
     var isContextMenuVisible by rememberSaveable { mutableStateOf(false) }
     var pressOffset by remember { mutableStateOf(DpOffset.Zero) }
-    var itemHeight by remember { mutableStateOf(0.dp) }
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .onSizeChanged { itemHeight = it.height.dp }
             .pointerInput(true) {
                 detectTapGestures(onLongPress = {
                     isContextMenuVisible = true
-                    pressOffset = DpOffset(it.x.dp, it.y.dp)
+                    pressOffset = DpOffset(x = it.x.dp, y = it.y.dp)
                 })
             }
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        Color.Transparent,
+                        if (!isContextMenuVisible) Color.Transparent else Color.Blue,
                         heartData.getColor(),
                         heartData.getColor(),
-                        Color.Transparent
+                        if (!isContextMenuVisible) Color.Transparent else Color.Blue
                     )
                 ),
             )
-            .padding(horizontal = 12.dp, vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            fontSize = 20.sp,
-            text = heartData.dateTime.getTime,
-        )
-        Text(
-            fontSize = 30.sp,
-            text = "${heartData.topPressure} / ${heartData.lowPressure}"
-        )
-        Text(
-            modifier = Modifier.width(60.dp),
-            fontSize = 24.sp,
-            text = "♡ ${heartData.pulse ?: " -"}"
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                fontSize = 20.sp,
+                text = heartData.dateTime.getTime,
+            )
+            Text(
+                fontSize = 30.sp,
+                text = "${heartData.topPressure} / ${heartData.lowPressure}"
+            )
+            Text(
+                modifier = Modifier.width(60.dp),
+                fontSize = 24.sp,
+                text = "♡ ${heartData.pulse ?: " -"}"
+            )
+        }
         DropdownMenu(
             expanded = isContextMenuVisible,
             onDismissRequest = { isContextMenuVisible = false },
-            offset = pressOffset.copy(
-                y = pressOffset.y - itemHeight
+            offset = DpOffset(
+                x = pressOffset.x / 3,
+                y = (-20).dp
             )
         ) {
             contextMenu.forEach { item ->
                 DropdownMenuItem(
-                    text = { Text(text = item.label) },
+                    text = {
+                        Text(
+                            fontSize = 18.sp,
+                            text = item.label
+                        )
+                    },
                     onClick = {
                         item.action(heartData.id)
                         isContextMenuVisible = false
                     })
             }
         }
-
-
     }
     HorizontalDivider(color = Color.DarkGray)
 }
