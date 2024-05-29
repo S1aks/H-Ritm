@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -96,14 +97,14 @@ fun DrawerItem(
                 .height(50.dp)
                 .padding(horizontal = 10.dp, vertical = 2.dp)
                 .fillMaxWidth(),
+            shape = RectangleShape,
             enabled = selected,
             onClick = { onItemClick() })
         {
             Icon(
                 modifier = Modifier
                     .scale(1.2f)
-                    .padding(horizontal = 10.dp)
-                    .offset(y = 0.dp),
+                    .offset(x = -10.dp, y = 0.dp),
                 imageVector = item.icon
                     ?: throw RuntimeException("Ошибка иконки бокового меню"),
                 contentDescription = item.title
@@ -154,7 +155,7 @@ fun DrawerContent(
         }
     }
     Column(
-        modifier = Modifier.width(280.dp)
+        modifier = Modifier.width(250.dp)
     ) {
         DrawerHeader()
         LazyColumn {
