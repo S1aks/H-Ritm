@@ -81,6 +81,7 @@ fun DataEditScreen(
         onComposing(
             MainScreenState(
                 title = { Text(if (new) "Добавить показания" else "Редактировать показания") },
+                drawerEnabled = false,
                 actions = {
                     DoneIconButton(enabled = allFieldsOk()) {
                         saveData?.let {

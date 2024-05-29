@@ -52,6 +52,7 @@ fun DataListScreen(
         onComposing(
             MainScreenState(
                 title = { Text("H-Ritm") },
+                drawerEnabled = true,
                 actions = {
                     AddIconButton {
                         navController.navigate(Screen.DataEdit("0").route)
