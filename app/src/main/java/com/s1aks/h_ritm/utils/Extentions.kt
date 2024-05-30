@@ -19,9 +19,9 @@ val Long.getTime: String
     get() = LocalDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
         .format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
 
-fun HeartData.getColor(): Color =
+fun HeartData.getColor(age: Int): Color =
     with(this) {
-        val heartRange = heartRangesByAge.first { AGE in it.ageRange }
+        val heartRange = heartRangesByAge.first { age in it.ageRange }
         when {
             topPressure < heartRange.topRange.first - 10
                     || topPressure > heartRange.topRange.last + 10

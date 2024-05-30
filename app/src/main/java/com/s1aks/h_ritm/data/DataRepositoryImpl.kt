@@ -2,10 +2,9 @@ package com.s1aks.h_ritm.data
 
 import com.s1aks.h_ritm.data.db.HeartDataBase
 import com.s1aks.h_ritm.data.entities.HeartData
-import com.s1aks.h_ritm.data.entities.PrefData
-import com.s1aks.h_ritm.domain.Repository
+import com.s1aks.h_ritm.domain.DataRepository
 
-class RepositoryImpl : Repository {
+class DataRepositoryImpl : DataRepository {
     override suspend fun getData(id: Int): HeartData =
         HeartDataBase.getInstance().historyDao().getData(id)
 
@@ -20,8 +19,4 @@ class RepositoryImpl : Repository {
 
     override suspend fun deleteData(id: Int) =
         HeartDataBase.getInstance().historyDao().delete(id)
-
-    override suspend fun getPrefData(): PrefData? = null
-
-    override suspend fun savePrefData(data: PrefData) {}
 }

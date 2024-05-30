@@ -1,8 +1,10 @@
 package com.s1aks.h_ritm.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -41,7 +43,11 @@ fun SettingsScreen(
     val allFieldsOk = fun(): Boolean = age.isNotEmpty() && age.toInt() in 0..130
     val (firstRef) = remember { FocusRequester.createRefs() }
     val data by viewModel.data.collectAsState()
-    LaunchedEffect(data) { data?.let { age = it.age.toString() } }
+    LaunchedEffect(data) {
+        data?.let {
+            if (it.age > 0) age = it.age.toString()
+        }
+    }
     var saveData by remember { mutableStateOf<PrefData?>(null) }
     saveData = if (allFieldsOk()) {
         PrefData(age.toInt())
@@ -54,26 +60,26 @@ fun SettingsScreen(
                 actions = {
                     DoneIconButton(enabled = allFieldsOk()) {
                         saveData?.let {
-                            viewModel.saveData(it)
+                            viewModel.savePrefData(it)
                             navController.popBackStack()
                         }
                     }
                 }
             )
         )
-        viewModel.getData()
     }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(22.dp)
     ) {
-        if (data == null) {
+        if ((data == null) or (data?.age == 0)) {
             Text(
                 fontSize = 18.sp,
                 color = Color.Red,
                 text = "Первый запуск приложения, введите пожалуйста возраст!"
             )
+            Spacer(modifier = Modifier.height(20.dp))
         }
         Text(fontSize = 20.sp, text = "Возраст")
         OutlinedTextField(
@@ -91,11 +97,4 @@ fun SettingsScreen(
             keyboardActions = KeyboardActions(onNext = { }), //secondRef.requestFocus()
         )
     }
-    LaunchedEffect(Unit) { firstRef.requestFocus() }
 }
-
-
-data class DirectionEditScreenState(
-    val allFieldsOk: Boolean,
-    var age: Int?
-)

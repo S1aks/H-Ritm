@@ -37,6 +37,7 @@ import com.s1aks.h_ritm.utils.getTime
 @Composable
 fun DataListItem(
     heartData: HeartData,
+    age: Int,
     contextMenu: List<ContextMenuItem> = listOf()
 ) {
     var isContextMenuVisible by rememberSaveable { mutableStateOf(false) }
@@ -54,8 +55,8 @@ fun DataListItem(
                 brush = Brush.linearGradient(
                     colors = if (!isContextMenuVisible) listOf(
                         Color.Transparent,
-                        heartData.getColor(),
-                        heartData.getColor(),
+                        heartData.getColor(age),
+                        heartData.getColor(age),
                         Color.Transparent
                     ) else listOf(Color.Blue, Color.Transparent, Color.Blue)
                 ),

@@ -2,29 +2,24 @@ package com.s1aks.h_ritm.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.s1aks.h_ritm.data.RepositoryImpl
+import com.s1aks.h_ritm.data.PrefRepositoryIml
 import com.s1aks.h_ritm.data.entities.PrefData
-import com.s1aks.h_ritm.domain.Repository
+import com.s1aks.h_ritm.domain.PrefRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SettingsViewModel(
-    private val repository: Repository = RepositoryImpl()
+    private val repository: PrefRepository = PrefRepositoryIml()
 ) : ViewModel() {
-    private val _data = MutableStateFlow<PrefData?>(null)
-    val data: StateFlow<PrefData?> = _data.asStateFlow()
+    val data: StateFlow<PrefData?> = repository.userPreferences.stateIn(
+        viewModelScope, SharingStarted.Eagerly, null,
+    )
 
-    fun getData() {
-        viewModelScope.launch {
-            _data.value = withContext(Dispatchers.IO) { repository.getPrefData() }
-        }
-    }
-
-    fun saveData(data: PrefData) {
+    fun savePrefData(data: PrefData) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) { repository.savePrefData(data) }
         }

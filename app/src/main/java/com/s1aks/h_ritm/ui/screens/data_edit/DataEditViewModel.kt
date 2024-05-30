@@ -2,9 +2,9 @@ package com.s1aks.h_ritm.ui.screens.data_edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.s1aks.h_ritm.data.RepositoryImpl
+import com.s1aks.h_ritm.data.DataRepositoryImpl
 import com.s1aks.h_ritm.data.entities.HeartData
-import com.s1aks.h_ritm.domain.Repository
+import com.s1aks.h_ritm.domain.DataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class DataEditViewModel(
-    private val repository: Repository = RepositoryImpl()
+    private val repository: DataRepository = DataRepositoryImpl()
 ) : ViewModel() {
     private val _data = MutableStateFlow<HeartData?>(null)
     val data: StateFlow<HeartData?> = _data.asStateFlow()

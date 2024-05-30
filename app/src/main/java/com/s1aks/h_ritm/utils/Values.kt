@@ -6,7 +6,6 @@ import com.s1aks.h_ritm.data.entities.HeartRange
 
 const val DATE_DAY_FORMAT = "dd MMMM y"
 const val DATE_TIME_FORMAT = "HH:mm"
-internal const val AGE = 45
 
 val preview_list = listOf(
     HeartData(1, 1715227048000L, 120, 80, 60),

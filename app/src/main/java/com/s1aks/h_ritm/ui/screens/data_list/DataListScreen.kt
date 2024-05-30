@@ -34,9 +34,11 @@ fun DataListScreen(
     onComposing: (MainScreenState) -> Unit,
     viewModel: DataListViewModel = viewModel()
 ) {
+    val prefData by viewModel.prefData.collectAsState()
     val screenState: DataListScreenState by remember {
         mutableStateOf(DataListScreenState(
             data = listOf(),
+            age = 0,
             contextMenu = listOf(
                 ContextMenuItem("Редактировать") { id ->
                     navController.navigate(Screen.DataEdit(id = id.toString()).route)
@@ -62,15 +64,20 @@ fun DataListScreen(
         )
         viewModel.getAllData()
     }
-    if (dataList.isNotEmpty()) {
-        DataList(state = screenState.copy(data = dataList))
+    if (dataList.isNotEmpty() && (prefData != null) && (prefData!!.age > 0)) {
+        DataList(state = screenState.copy(data = dataList, age = prefData!!.age))
     } else {
-        Text(text = "Пусто")
+        if ((prefData != null) && (prefData!!.age == 0)) {
+            navController.navigate(Screen.Settings.route)
+        } else {
+            Text(text = "Пусто")
+        }
     }
 }
 
 data class DataListScreenState(
     var data: List<HeartData>,
+    val age: Int,
     val contextMenu: List<ContextMenuItem>
 )
 
@@ -89,7 +96,7 @@ fun DataList(state: DataListScreenState) {
                     state.data[indexItem - 1].dateTime.getDate
                 } else currentDate
                 if (indexItem == 0 || currentDate != prevDate) DataListDateItem(currentDate)
-                DataListItem(heartData = listItem, contextMenu = state.contextMenu)
+                DataListItem(heartData = listItem, state.age, contextMenu = state.contextMenu)
             }
         }
     }
@@ -99,5 +106,5 @@ fun DataList(state: DataListScreenState) {
 @Preview(showBackground = true)
 @Composable
 fun DataListScreenPreview() {
-    DataList(state = DataListScreenState(preview_list, listOf()))
+    DataList(state = DataListScreenState(preview_list, 45, listOf()))
 }
