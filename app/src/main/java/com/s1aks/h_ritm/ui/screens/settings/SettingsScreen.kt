@@ -10,6 +10,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,12 +19,14 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.s1aks.h_ritm.data.entities.PrefData
 import com.s1aks.h_ritm.ui.elements.DoneIconButton
 import com.s1aks.h_ritm.ui.screens.MainScreenState
 
@@ -34,31 +37,44 @@ fun SettingsScreen(
     onComposing: (MainScreenState) -> Unit,
     viewModel: SettingsViewModel = viewModel()
 ) {
-    val new = false
     var age by remember { mutableStateOf("") }
-    val allFieldsOk = fun(): Boolean = age.isNotEmpty() && age.toInt() > 25
+    val allFieldsOk = fun(): Boolean = age.isNotEmpty() && age.toInt() in 0..130
     val (firstRef) = remember { FocusRequester.createRefs() }
+    val data by viewModel.data.collectAsState()
+    LaunchedEffect(data) { data?.let { age = it.age.toString() } }
+    var saveData by remember { mutableStateOf<PrefData?>(null) }
+    saveData = if (allFieldsOk()) {
+        PrefData(age.toInt())
+    } else null
     LaunchedEffect(Unit) {
         onComposing(
             MainScreenState(
                 title = { Text("Настройки") },
                 drawerEnabled = false,
                 actions = {
-                    DoneIconButton(enabled = true) { //todo
-                        //viewModel.updateData(it)
-                        navController.popBackStack()
-
+                    DoneIconButton(enabled = allFieldsOk()) {
+                        saveData?.let {
+                            viewModel.saveData(it)
+                            navController.popBackStack()
+                        }
                     }
                 }
             )
         )
-        //viewModel.getAllData()
+        viewModel.getData()
     }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(22.dp)
     ) {
+        if (data == null) {
+            Text(
+                fontSize = 18.sp,
+                color = Color.Red,
+                text = "Первый запуск приложения, введите пожалуйста возраст!"
+            )
+        }
         Text(fontSize = 20.sp, text = "Возраст")
         OutlinedTextField(
             modifier = Modifier
@@ -75,9 +91,11 @@ fun SettingsScreen(
             keyboardActions = KeyboardActions(onNext = { }), //secondRef.requestFocus()
         )
     }
-    LaunchedEffect(Unit) {
-        if (new) {
-            firstRef.requestFocus()
-        }
-    }
+    LaunchedEffect(Unit) { firstRef.requestFocus() }
 }
+
+
+data class DirectionEditScreenState(
+    val allFieldsOk: Boolean,
+    var age: Int?
+)
