@@ -123,7 +123,7 @@ fun DrawerContent(
     drawerItems: List<MainNavItem> = listOf(
         MainNavItem.Spacer,
         MainNavItem.Settings,
-        MainNavItem.Export,
+//        MainNavItem.Export,
         MainNavItem.Spacer,
         MainNavItem.Exit
     ),
