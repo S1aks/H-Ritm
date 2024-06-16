@@ -29,9 +29,9 @@ enum class NavRoutes {
 }
 
 sealed class Screen(val route: String) {
-    object DataList : Screen("data_list")
+    data object DataList : Screen("data_list")
     class DataEdit(id: String = "{id}") : Screen("data_edit/$id")
-    object Settings : Screen("settings")
+    data object Settings : Screen("settings")
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

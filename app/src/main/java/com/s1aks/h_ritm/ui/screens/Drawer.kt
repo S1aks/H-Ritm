@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
@@ -75,10 +74,9 @@ sealed class MainNavItem(
     val route: String,
     val isDivider: Boolean = false,
 ) {
-    object Spacer : MainNavItem("", null, "", true)
-    object Settings : MainNavItem("Настройки", Icons.Default.Settings, Screen.Settings.route)
-    object Export : MainNavItem("Экспорт данных", Icons.Default.Share, "")
-    object Exit : MainNavItem("Выход", Icons.AutoMirrored.Filled.ExitToApp, "Exit")
+    data object Spacer : MainNavItem("", null, "", true)
+    data object Settings : MainNavItem("Настройки", Icons.Default.Settings, Screen.Settings.route)
+    data object Exit : MainNavItem("Выход", Icons.AutoMirrored.Filled.ExitToApp, "Exit")
 }
 
 @Composable
@@ -104,7 +102,7 @@ fun DrawerItem(
             Icon(
                 modifier = Modifier
                     .scale(1.2f)
-                    .offset(x = -10.dp, y = 0.dp),
+                    .offset(x = (-10).dp, y = 0.dp),
                 imageVector = item.icon
                     ?: throw RuntimeException("Ошибка иконки бокового меню"),
                 contentDescription = item.title
@@ -123,7 +121,6 @@ fun DrawerContent(
     drawerItems: List<MainNavItem> = listOf(
         MainNavItem.Spacer,
         MainNavItem.Settings,
-//        MainNavItem.Export,
         MainNavItem.Spacer,
         MainNavItem.Exit
     ),
